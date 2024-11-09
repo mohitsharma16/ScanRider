@@ -1,3 +1,5 @@
+import org.gradle.internal.impldep.org.jsoup.nodes.Entities.EscapeMode.extended
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -43,7 +45,8 @@ dependencies {
     // Firebase BoM and Firebase Authentication
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth")
-
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation("com.google.accompanist:accompanist-pager:0.25.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
