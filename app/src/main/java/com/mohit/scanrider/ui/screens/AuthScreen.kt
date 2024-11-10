@@ -1,6 +1,5 @@
 package com.mohit.scanrider.ui.screens
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.sp
 fun AuthScreen(
     isLogin: Boolean, // Determines if we're showing login or register UI
     onAuthAction: (email: String, password: String) -> Unit,
+    onGoogleSignIn: () -> Unit, // Callback for Google Sign-In
     onToggleMode: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
@@ -29,6 +29,7 @@ fun AuthScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Title
         Text(
             text = if (isLogin) "Login to Scan Rider" else "Register on Scan Rider",
             fontSize = 24.sp,
@@ -74,6 +75,20 @@ fun AuthScreen(
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(text = if (isLogin) "Login" else "Register")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Google Sign-In Button
+        Button(
+            onClick = onGoogleSignIn, // Google Sign-In action
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
+        ) {
+            Text(text = "Sign in with Google", color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(16.dp))

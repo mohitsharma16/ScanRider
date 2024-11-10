@@ -3,51 +3,54 @@ package com.mohit.scanrider
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.google.firebase.FirebaseApp
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.mohit.scanrider.ui.screens.AuthScreen
+import com.mohit.scanrider.ui.screens.MainScreen
 import com.mohit.scanrider.ui.theme.ScanRiderTheme
+import com.mohit.scanrider.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize Firebase here
-        FirebaseApp.initializeApp(this)
-
-        enableEdgeToEdge()
         setContent {
             ScanRiderTheme {
-                MainScreen()
+                val navController = rememberNavController()
+                val authViewModel: AuthViewModel = viewModel()
+
+                // Observe authentication state
+                val isAuthenticated by authViewModel.isAuthenticated.collectAsState()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = if (isAuthenticated) "main" else "auth"
+                ) {
+                    composable("auth") {
+                        AuthScreen(
+                            isLogin = true,
+                            onAuthAction = { email, password ->
+                                authViewModel.signInWithEmail(email, password) // Firebase email login
+                            },
+                            onGoogleSignIn = { authViewModel.signInWithGoogle(this@MainActivity) }, // Google Sign-In
+                            onToggleMode = {
+                                authViewModel.toggleLoginMode() // Toggle between login and registration
+                            }
+                        )
+                    }
+                    composable("main") {
+                        MainScreen(
+                            onLogout = { authViewModel.logout() },
+                            onSearch = TODO(),
+                            vehicleData = TODO(),
+//                            onVehicleSearch = { /* Implement vehicle search */ },
+//                            onImageSelectorOpen = { /* Implement image selector */ }
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-fun MainScreen() {
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        content = { paddingValues ->
-            // Add your main screen content here
-            Text(
-                text = "Welcome to Scan Rider!",
-                modifier = Modifier.padding(paddingValues)
-            )
-        }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    ScanRiderTheme {
-        MainScreen()
     }
 }

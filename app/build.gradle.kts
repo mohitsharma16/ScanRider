@@ -47,6 +47,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("com.google.accompanist:accompanist-pager:0.25.1")
+    implementation("com.google.android.gms:play-services-auth:20.2.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
